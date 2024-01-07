@@ -29,6 +29,12 @@ const CreateNotes = () => {
     setNoteTexts([...noteTexts, ""]);
   };
 
+  const handleRemoveNote = (index) => {
+    const updatedNoteTexts = [...noteTexts];
+    updatedNoteTexts.splice(index, 1);
+    setNoteTexts(updatedNoteTexts);
+  };
+
   const handleNoteTextChange = (index, text) => {
     const updatedNoteTexts = [...noteTexts];
     updatedNoteTexts[index] = text;
@@ -49,6 +55,13 @@ const CreateNotes = () => {
             onChange={(e) => handleNoteTextChange(index, e.target.value)}
           />
           <br />
+          <button
+            className="btn btn-danger mx-2 float-end mb-2"
+            onClick={() => handleRemoveNote(index)}
+            
+          >
+            Remove Note
+          </button>
         </div>
       ))}
       <input
@@ -58,13 +71,15 @@ const CreateNotes = () => {
         disabled
       />
       <br />
+
+      <button className="btn btn-primary mx-2 mt-3" onClick={handleAddNote}>
+        Add Note
+      </button>
       <Link to={`/final-quotation/${id}`}  className="btn btn-success mt-3" onClick={handleCreateNote}>
       Create Notes
       </Link>
       
-      <button className="btn btn-primary mx-2 mt-3" onClick={handleAddNote}>
-        Add Note
-      </button>
+      
      
     </div>
   );
