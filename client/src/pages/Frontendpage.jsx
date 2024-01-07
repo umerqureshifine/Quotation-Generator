@@ -5,9 +5,9 @@ import styled from "styled-components";
 function Frontendpage({ quotationName }) {
   return (
     <Wrapper>
-      <div className="container-fluid">
+      <div className="">
         
-        <div class="container-fluid">
+        <div className="">
           <div className="row">
             <div className="col-12">
               <img src={img} style={{ width: "inherit" }} />

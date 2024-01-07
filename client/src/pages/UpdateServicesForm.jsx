@@ -1,14 +1,15 @@
-// UpdateServicesForm.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError,newServices  }) => {
+const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError }) => {
   const [services, setServices] = useState([]);
 
   const fetchServices = async () => {
     try {
       const response = await axios.get(`http://localhost:9000/api/quotation/${quotationId}`);
       setServices(response.data);
+
     } catch (error) {
       console.error('Error fetching services:', error);
     }
@@ -19,12 +20,15 @@ const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError,newSer
     try {
       const response = await axios.put(`http://localhost:9000/api/quotation/${quotationId}`, {
         services,
+
       });
+      
 
       if (response.data.success) {
         console.log('Services updated successfully');
         onUpdateSuccess();
       }
+      
     } catch (error) {
       console.error('Error updating services:', error);
       onUpdateError();

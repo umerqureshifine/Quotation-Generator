@@ -16,6 +16,8 @@ function Print_Page() {
   const [quotationName, setQuotationName] = useState(""); // New state to store quotation name
   const [totalActualPrice, setTotalActualPrice] = useState(0);
   const [totalOfferPrice, setTotalOfferPrice] = useState(0);
+  const [shouldPrint, setShouldPrint] = useState(false);  // State to control printing
+  const [notes, setNotes] = useState([]); 
 
   const fetchQuotations = async () => {
     try {
@@ -39,18 +41,39 @@ function Print_Page() {
 
         setTotalActualPrice(actualPriceTotal);
         setTotalOfferPrice(offerPriceTotal);
+
+        setShouldPrint(true);
       }
     } catch (error) {
       console.error("Error fetching quotations:", error);
     }
   };
+  const fetchNotes = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:9000/api/notes/${id}`
+      );
+
+      if (response.status === 200) {
+        setNotes(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
 
  
+  useEffect(() => {
+    fetchQuotations();
+    fetchNotes();
+  }, []); // Empty dependency array ensures this effect runs only once on mount
 
   useEffect(() => {
-    // Fetch quotations when the component mounts
-    fetchQuotations();
-  }, []);
+    // Trigger print when shouldPrint is true
+    if (shouldPrint) {
+      window.print();
+    } 
+  }, [shouldPrint]); // Effect will run whenever shouldPrint changes
 
   return (
     <>
@@ -94,37 +117,67 @@ function Print_Page() {
             </tbody>
           </table>
          
-          <div className="note">
-            <h5 className=" fw-bold">Notes:-</h5>
+          
+          <div className="note mt-3">
+          <h5 className=" fw-bold">Notes:-</h5>
 
-            <ul>
-              <li>
-                SMM Ad Budget
-                <p>
-                  Ads budget will be decided by client, suggested ad budget
-                  15000/
-                </p>
-              </li>
-              <li>
-                Payment will be 100% in advance and is expected till 3rd of
-                every month
-              </li>
-              <li>
-                Payment/plan can be stop/change by informing one month in
-                advance if not satisfied with the services.
-              </li>
-              <li>
-                One dedicated SPOC (single point of contact) is required from
-                client side to approve the posts/contents/videos/website changes
-                etc.
-              </li>
-              <li>
-                Telephonic or short meetings required weekly and monthly meeting
-                time (1hr) is required to review the reports and for discussing
-                future plannings/strategies.
-              </li>
-            </ul>
-          </div>
+              <ul>
+                {notes.map((note) => (
+                  <li key={note.id}>
+                    {note.note_text}
+                    <p>{note.additional_info}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+        </div>
+        <div className="container-fluid mt-2">
+          <h4>Payment Conditions for website Development</h4>
+          <table className="table table-bordered mt-3">
+            <thead>
+              <tr>
+
+                <th colSpan="4" className="th ">
+                Payment Installment
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>60%</td>
+                <td>On placement of order</td>
+               
+              </tr>
+              <tr>
+                <td>40%</td>
+                <td>Before Go live</td>
+                
+              </tr>
+              {/* Other payment details */}
+            </tbody>
+          </table>
+        </div>
+        <div className="container-fluid mt-2">
+          <h4>Payment Conditions for SEO, SMO and SMM</h4>
+          <table className="table table-bordered mt-3">
+            <thead>
+              <tr>
+
+                <th colSpan="4" className="th ">
+                Payment Installment
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>100%</td>
+                <td>On placement of order</td>
+               
+              </tr>
+            
+              {/* Other payment details */}
+            </tbody>
+          </table>
         </div>
 
         <div className="container-fluid">
@@ -157,7 +210,7 @@ function Print_Page() {
         </div>
       </Wrapper>
 
-      <Fotter />
+      {/* <Fotter /> */}
       <Lastpage />
     </>
   );

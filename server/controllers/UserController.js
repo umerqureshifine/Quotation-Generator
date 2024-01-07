@@ -218,13 +218,48 @@ const GetServices = (req, res) => {
   }
 };
 
+// const updateServices = async (req, res) => {
+//   try {
+//     const { quotationId } = req.params;
+//     const { services } = req.body;
+
+ 
+//     for (const service of services) {
+//       const sqlUpdateService = `
+//         UPDATE services_data
+//         SET
+//           service_type = ?,
+//           service_description = ?,
+//           actual_price = ?,
+//           offer_price = ?
+//         WHERE
+//           quotation_id = ? AND service_id = ?`;
+
+//       const values = [
+//         service.service_type,
+//         service.service_description,
+//         service.actual_price,
+//         service.offer_price,
+//         quotationId,
+//         service.service_id,
+//       ];
+
+//       await db.query(sqlUpdateService, values);
+//     }
+
+//     res.status(200).json({ success: true, message: 'Services updated successfully' });
+//   } catch (error) {
+//     console.error('Error updating services:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
+
 const updateServices = async (req, res) => {
   try {
     const { quotationId } = req.params;
     const { services } = req.body;
 
- 
-    for (const service of services) {
+    const updateServicePromises = services.map(async (service) => {
       const sqlUpdateService = `
         UPDATE services_data
         SET
@@ -245,7 +280,9 @@ const updateServices = async (req, res) => {
       ];
 
       await db.query(sqlUpdateService, values);
-    }
+    });
+
+    await Promise.all(updateServicePromises);
 
     res.status(200).json({ success: true, message: 'Services updated successfully' });
   } catch (error) {
@@ -254,5 +291,73 @@ const updateServices = async (req, res) => {
   }
 };
 
-module.exports = { Quotation, GetQuotation, Quotationviaid, GetServices,deleteQuotation,updateServices};
+// const Notes = (req, res) => {
+//   const { noteText, quotationId } = req.body;
+
+//   const sql = 'INSERT INTO notes (note_text, quotation_id) VALUES (?, ?)';
+//   db.query(sql, [noteText, quotationId], (err, result) => {
+//     if (err) {
+//       console.error('Error inserting note:', err);
+//       res.status(500).json({ error: 'Internal Server Error' });
+//     } else {
+//       res.status(201).json({ id: result.insertId });
+//     }
+//   });
+// };
+const Notes = (req, res) => {
+  const { noteTexts, quotationId } = req.body;
+
+  // Assuming noteTexts is an array of strings
+  const values = noteTexts.map((text) => [text, quotationId]);
+
+  const sql = 'INSERT INTO notes (note_text, quotation_id) VALUES ?';
+
+  db.query(sql, [values], (err, result) => {
+    if (err) {
+      console.error('Error inserting notes:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.status(201).json({ ids: result.insertId });
+    }
+  });
+};
+
+
+const getNotes = (req, res) => {
+  const { quotationId } = req.params;
+
+  // Assuming you have a 'notes' table in your database
+  const sql = 'SELECT * FROM notes WHERE quotation_id = ?';
+
+  db.query(sql, [quotationId], (err, result) => {
+    if (err) {
+      console.error('Error fetching notes:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.status(200).json(result);
+    }
+  });
+};
+
+const deleteNote = (req, res) => {
+  const noteId = req.params.noteId;
+
+  const sql = 'DELETE FROM notes WHERE id = ?';
+
+  db.query(sql, [noteId], (err, result) => {
+    if (err) {
+      console.error('Error deleting note:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.status(200).json({ message: 'Note deleted successfully' });
+    }
+  });
+};
+
+
+
+
+
+
+module.exports = { Quotation, GetQuotation, Quotationviaid, GetServices,deleteQuotation,updateServices,Notes,getNotes,deleteNote};
 
