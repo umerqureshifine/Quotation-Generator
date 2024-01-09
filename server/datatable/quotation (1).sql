@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2024 at 04:55 AM
+-- Generation Time: Jan 09, 2024 at 06:36 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -50,7 +50,44 @@ INSERT INTO `notes` (`id`, `quotation_id`, `note_text`) VALUES
 (18, 92, 'rere'),
 (21, 92, 'ttttt'),
 (22, 84, 'uksiuedwl'),
-(23, 84, 'kljdijd');
+(23, 84, 'kljdijd'),
+(24, 84, 'rferre'),
+(27, 81, 'asadfg ll, .mm miji'),
+(29, 96, 'Ad amount excluding in this above given budget, suggested budget 1000000\n'),
+(30, 96, 'please provide all credentials and deatails about organisation'),
+(50, 81, 'Ads budget will be decided by client, suggested ad budget 15000/-'),
+(51, 81, 'Payment/plan can be stopped/changed by informing one month in advance if not satisfied with the services.'),
+(52, 81, 'One dedicated SPOC (single point of contact) is required from the client side to approve the posts/contents/videos/website changes, etc.'),
+(53, 81, 'Required details like credentials and other details are needed to share timely.'),
+(54, 81, 'SMM Ad Budget\nAds budget will be decided by client, suggested ad budget 15000/-'),
+(55, 81, 'Estimated time for keywords ranking on the first page,\nLow-competition keywords take 2-3 months,\nMedium competition Keywords take 3-5 months,\nHigh-competition Keywords take 6-9 months.\n'),
+(56, 81, 'Estimated time for keywords ranking on the first page,\n\n\n\n\n\nLow-competition keywords take 2-3 months,\nMedium competition Keywords take 3-5 months,\nHigh-competition Keywords take 6-9 months.\n'),
+(57, 81, 'SMM Ad Budget :-\nAds budget will be decided by client, suggested ad budget 15000/-'),
+(58, 81, 'Estimated time for keywords ranking on the first page : -\n\n\n\n\n\nLow-competition keywords take 2-3 months,\nMedium competition Keywords take 3-5 months,\nHigh-competition Keywords take 6-9 months.\n');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notes_data`
+--
+
+CREATE TABLE `notes_data` (
+  `notes_id` int(200) NOT NULL,
+  `notes_text` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notes_data`
+--
+
+INSERT INTO `notes_data` (`notes_id`, `notes_text`) VALUES
+(1, 'SMM Ad Budget :-\nAds budget will be decided by client, suggested ad budget 15000/-'),
+(2, 'Payment will be 100% in advance and is expected till 3rd of every month.'),
+(3, 'Payment/plan can be stopped/changed by informing one month in advance if not satisfied with the services.'),
+(4, 'One dedicated SPOC (single point of contact) is required from the client side to approve the posts/contents/videos/website changes, etc.'),
+(5, 'Required details like credentials and other details are needed to share timely.'),
+(6, 'Telephonic or short meetings required weekly, and a monthly meeting time (1hr) is required to review the reports and for discussing future plannings/strategies.'),
+(7, 'Estimated time for keywords ranking on the first page : -\n\n\n\n\n\nLow-competition keywords take 2-3 months,\nMedium competition Keywords take 3-5 months,\nHigh-competition Keywords take 6-9 months.\n');
 
 -- --------------------------------------------------------
 
@@ -122,57 +159,11 @@ INSERT INTO `quotations_data` (`quotation_id`, `quotation_name`) VALUES
 (89, 'ujh'),
 (90, 'tht'),
 (91, 'WHO'),
-(92, 'Wipro');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `register`
---
-
-CREATE TABLE `register` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `reset_token` varchar(255) DEFAULT NULL,
-  `reset_token_expires_at` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `register`
---
-
-INSERT INTO `register` (`id`, `name`, `email`, `password`, `reset_token`, `reset_token_expires_at`, `created_at`, `updated_at`) VALUES
-(1, 'John Doe', 'john.doe@example.com', 'hashed_password', NULL, NULL, '2023-12-30 17:10:24', '2023-12-30 17:10:24');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `registered_data`
---
-
-CREATE TABLE `registered_data` (
-  `id` int(11) NOT NULL,
-  `name` varchar(200) NOT NULL,
-  `email` varchar(200) NOT NULL,
-  `password` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `registered_data`
---
-
-INSERT INTO `registered_data` (`id`, `name`, `email`, `password`) VALUES
-(1, '[value-2]', '[value-3]', '[value-4]'),
-(2, 'umer', 'umer@gmail.com', '$2b$10$cnxUwp1/fSk98zmA2I3eYeBbkbztSg8od01QVr470k5BJSMD3P84u'),
-(3, 'umerqureshi', 'umerqureshi@gmail.com', '$2b$10$8SMiIRgvb.TNxkwatmwVBunBymCXZe4egYAb5xlXp1CqBX8ojKl9i'),
-(4, 'sonu', 'sonu@gmail.com', '$2b$10$xW/dCld.bvEVZmV2rCV0t.fsgKhU7LynW3O8otskHhEYdCw2aYdWy'),
-(5, 'soni', 'soni@gmail.com', '$2b$10$wpW4hDUuCa8cm7Rgz2FKWekTG1rLOZkkgdW4nSsW0Qup3hPRd8ppK'),
-(6, 'pawan', 'pawan@gmail.com', '$2b$10$nAl0ssVNQSQUll/la6MZ3eHmT2VKdh6UIOhTboaOQIUr6pQ1xMQiC'),
-(7, 'juber', 'juber@gmail.com', '$2b$10$n1nm6ypWBE7BYr.Sx7qyMOVCrVe9gv1ssDJojOAETVJcqA95Jh676');
+(92, 'Wipro'),
+(93, 'Other service'),
+(94, 'umer it solution'),
+(96, 'Institution Video Plalist platform'),
+(98, 'pccc');
 
 -- --------------------------------------------------------
 
@@ -222,7 +213,7 @@ CREATE TABLE `services_data` (
   `quotation_name` varchar(255) NOT NULL,
   `service_type` varchar(255) NOT NULL,
   `service_description` text NOT NULL,
-  `actual_price` decimal(10,2) NOT NULL,
+  `actual_price` decimal(10,2) DEFAULT NULL,
   `offer_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -283,7 +274,6 @@ INSERT INTO `services_data` (`service_id`, `quotation_id`, `quotation_name`, `se
 (134, 81, 'Demo quotation', 'Facebook Paid Ads', 'ihknjkhj klkn', 4511.00, 4000.00),
 (135, 81, 'Demo quotation', 'Content Writing', 'yu jhjhj kl', 50000.00, 15020.00),
 (136, 81, 'Demo quotation', 'Cloud Computing', 'hhii  mmkkl kk,pok', 50000.00, 100000.00),
-(137, 81, 'Demo quotation', 'Data Science & Engineering', 'yu nnk llpl', 15000.00, 10000.00),
 (139, 83, 'kfjd', 'Website Design & Development', 'sdfd', 34234.00, 34234.00),
 (140, 83, 'kfjd', 'Social Media Optimization (SMO)', '2342', 232.00, 323.00),
 (141, 84, 'fedf', 'Social Media Marketing (SMM)', 'edw', 399.00, 2300.00),
@@ -297,7 +287,22 @@ INSERT INTO `services_data` (`service_id`, `quotation_id`, `quotation_name`, `se
 (150, 91, 'WHO', 'YouTube Optimization', 'dff', 3443.00, 444.00),
 (151, 91, 'WHO', 'Mobile Application Development (Android & IOS)', 'dgfdf', 3434.00, 3434.00),
 (152, 92, 'Wipro', 'Social Media Optimization (SMO)', 'testjkdsds', 40000.00, 20000.00),
-(153, 92, 'Wipro', 'Graphic & Logo Designing', 'jsdh', 22389.00, 2323.00);
+(153, 92, 'Wipro', 'Graphic & Logo Designing', 'jsdh', 22389.00, 2323.00),
+(154, NULL, '', 'Bulk WhatsApp', 'bulk', 3434.00, 3444.00),
+(155, NULL, '', 'Bulk WhatsApp', 'bulk', 3000.00, 5000.00),
+(156, NULL, '', 'Staffing', 'sdds', 23.00, 232.00),
+(157, NULL, '', 'Bulk WhatsApp', 'grtfe', 343.00, 343434.00),
+(158, NULL, '', 'Search Engine Optimization (SEO)', '1qw', 231.00, 2.00),
+(162, 93, 'Other service', 'Other Service', 'cccc', 34.00, 3434.00),
+(163, 94, 'umer it solution', 'developer', 'sdfds', 344.00, 3434.00),
+(167, 96, 'Institution Video Plalist platform', 'Video Intro', 'Result Oriented Digital marketing with Google PPC Ads, Facebook Ads etc', 50000.00, 45000.00),
+(168, 96, 'Institution Video Plalist platform', 'Website Design & Development', 'Institution Video Library Web Application', 120000.00, 25000.00),
+(169, 96, 'Institution Video Plalist platform', 'Google My Business Assist', 'Google my business with 100 review per month and local SEO', 5000.00, 0.00),
+(170, 96, 'Institution Video Plalist platform', 'Video Intro', 'We will provide Nat5ional Festival Post for your institution Promotion ', 5000.00, 0.00),
+(172, 96, 'Institution Video Plalist platform', 'Video Editing', 'll..;;', 25000.00, 0.00),
+(175, 98, 'pccc', 'umerer', 'sdwd', 3434.00, 3434.00),
+(176, 98, 'pccc', 'kdfjfefe', 'dfdfedf', 3434.00, 434.00),
+(177, 98, 'pccc', 'kljsdsd', 'rfgrr', 455.00, 46546.00);
 
 --
 -- Indexes for dumped tables
@@ -311,23 +316,16 @@ ALTER TABLE `notes`
   ADD KEY `quotation_id` (`quotation_id`);
 
 --
+-- Indexes for table `notes_data`
+--
+ALTER TABLE `notes_data`
+  ADD PRIMARY KEY (`notes_id`);
+
+--
 -- Indexes for table `quotations_data`
 --
 ALTER TABLE `quotations_data`
   ADD PRIMARY KEY (`quotation_id`);
-
---
--- Indexes for table `register`
---
-ALTER TABLE `register`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `registered_data`
---
-ALTER TABLE `registered_data`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `services`
@@ -350,25 +348,19 @@ ALTER TABLE `services_data`
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+
+--
+-- AUTO_INCREMENT for table `notes_data`
+--
+ALTER TABLE `notes_data`
+  MODIFY `notes_id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `quotations_data`
 --
 ALTER TABLE `quotations_data`
-  MODIFY `quotation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
-
---
--- AUTO_INCREMENT for table `register`
---
-ALTER TABLE `register`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `registered_data`
---
-ALTER TABLE `registered_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `quotation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -380,7 +372,7 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT for table `services_data`
 --
 ALTER TABLE `services_data`
-  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=187;
 
 --
 -- Constraints for dumped tables
