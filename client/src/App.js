@@ -8,6 +8,7 @@ import QuotationList from "./pages/QuotationList";
 import NotesTable from "./pages/NotesTable";
 import CreateNotes from "./pages/CreateNotes";
 import DeleteNotes from "./pages/DeleteNotes";
+import AddServices from "./pages/AddServices";
 
 
  
@@ -15,7 +16,7 @@ function App() {
   
   return (
     <>
-    {/* <Header/> */}
+
 
 <Routes>
        
@@ -26,6 +27,8 @@ function App() {
         <Route path="/quotationlist" element={<QuotationList />} />
         <Route path="/createnotes/:id" element={<CreateNotes />} />
         <Route path="/deletenotes/:id" element={<DeleteNotes />} />
+        <Route path="/addservices/:id" element={<AddServices />} />
+        
 
 
 
@@ -36,8 +39,7 @@ function App() {
       </Routes>
  
 
-{/*     
-    <Fotter/> */}
+
      
     </>
   );

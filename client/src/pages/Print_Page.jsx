@@ -74,6 +74,7 @@ function Print_Page() {
       window.print();
     } 
   }, [shouldPrint]); // Effect will run whenever shouldPrint changes
+  
 
   return (
     <>
@@ -90,15 +91,18 @@ function Print_Page() {
           <table className="table table-bordered mt-3">
             <thead>
               <tr>
+              <th>Sr.No</th>
                 <th>Service Type</th>
                 <th>Service Description</th>
                 <th>Actual Price</th>
                 <th>Offer Price</th>
+               
               </tr>
             </thead>
             <tbody>
-              {quotations.map((q) => (
+              {quotations.map((q, index) => (
                 <tr key={q.id}>
+                  <td className="text-center" style={{ fontSize: "1rem", fontWeight: "bold" }}>{index + 1}</td>
                   <td style={{ fontSize: "1rem", fontWeight: "bold" }}>
                     {q.service_type}
                   </td>
@@ -108,7 +112,7 @@ function Print_Page() {
                 </tr>
               ))}
               <tr>
-                <td colSpan="2" className="th">
+                <td colSpan="3" className="th">
                   Total Amount
                 </td>
                 <td className="th">{totalActualPrice}/-</td>

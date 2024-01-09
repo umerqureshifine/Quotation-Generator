@@ -1,89 +1,131 @@
 
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const CreateNotes = () => {
   const { id } = useParams();
-  const [noteTexts, setNoteTexts] = useState([""]);
-  const [quotationId, setQuotationId] = useState(id);
+  const navigate = useNavigate();
+  const [noteTexts, setNoteTexts] = useState([]);
+  const [selectedNotes, setSelectedNotes] = useState([]);
+  const [newNote, setNewNote] = useState("");
 
-  const handleCreateNote = async () => {
-    try {
-      // Make a POST request to the backend endpoint for creating notes
-      const response = await axios.post("http://localhost:9000/api/notes", {
-        noteTexts: noteTexts,
-        quotationId: quotationId,
-      });
+  useEffect(() => {
+    // Fetch notes from the backend API
+    const fetchNotes = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9000/api/notes_data`);
+        setNoteTexts(response.data);
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+      }
+    };
 
-      // If the notes are created successfully, you can handle the response here
-      console.log("Notes created successfully:", response.data);
-    } catch (error) {
-      // Handle errors, e.g., show an error message to the user
-      console.error("Error creating notes:", error);
-    }
+    fetchNotes();
+  }, []); // The empty dependency array ensures this effect runs only once when the component mounts
+
+  const handleNoteSelection = (e) => {
+    const selectedNote = e.target.value;
+    setNewNote(""); // Reset the new note input when selecting an existing note
+    setSelectedNotes([...selectedNotes, selectedNote]);
   };
 
   const handleAddNote = () => {
-    setNoteTexts([...noteTexts, ""]);
+    if (newNote.trim() !== "") {
+      setSelectedNotes([...selectedNotes, newNote]);
+      setNewNote("");
+    }
   };
 
   const handleRemoveNote = (index) => {
-    const updatedNoteTexts = [...noteTexts];
-    updatedNoteTexts.splice(index, 1);
-    setNoteTexts(updatedNoteTexts);
+    const updatedNotes = [...selectedNotes];
+    updatedNotes.splice(index, 1);
+    setSelectedNotes(updatedNotes);
   };
 
-  const handleNoteTextChange = (index, text) => {
-    const updatedNoteTexts = [...noteTexts];
-    updatedNoteTexts[index] = text;
-    setNoteTexts(updatedNoteTexts);
+  const handleCreateNotes = async () => {
+    try {
+      
+      for (const note of selectedNotes) {
+        const response = await axios.post("http://localhost:9000/api/notes", {
+          noteTexts: [note],
+          quotationId: id,
+        });
+
+       
+        console.log("Note stored successfully:", response.data);
+      }
+      navigate(`/final-quotation/${id}`);
+      
+    } catch (error) {
+      console.error("Error storing notes:", error);
+    }
   };
 
   return (
     <div className="container mt-5">
       <h2>Create New Notes</h2>
-      {noteTexts.map((text, index) => (
-        <div key={index}>
-          <textarea
-            rows="4"
-            cols="50"
-            className="form-control"
-            placeholder={`Enter note text #${index + 1}`}
-            value={text}
-            onChange={(e) => handleNoteTextChange(index, e.target.value)}
-          />
-          <br />
-          <button
-            className="btn btn-danger mx-2 float-end mb-2"
-            onClick={() => handleRemoveNote(index)}
-            
-          >
-            Remove Note
-          </button>
-        </div>
-      ))}
-      <input
-        type="text"
-        placeholder="Quotation ID"
-        value={quotationId}
-        disabled
-      />
-      <br />
 
-      <button className="btn btn-primary mx-2 mt-3" onClick={handleAddNote}>
-        Add Note
-      </button>
-      <Link to={`/final-quotation/${id}`}  className="btn btn-success mt-3" onClick={handleCreateNote}>
-      Create Notes
-      </Link>
+   
+      <select
+        className="form-select mb-3"
+        value=""
+        onChange={handleNoteSelection}
+      >
+        <option value="" disabled>Select an existing note</option>
+        {noteTexts.map((text, index) => (
+          <option key={index} value={text}>
+            {text}
+          </option>
+        ))}
+      </select>
+
+    
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter a new note"
+          value={newNote}
+          onChange={(e) => setNewNote(e.target.value)}
+        />
+        <button className="btn btn-primary mt-2" onClick={handleAddNote}>
+          Add Note
+        </button>
+      </div>
+
       
-      
+      {selectedNotes.length > 0 && (
+        <div className="mb-3">
+          <h5>Selected Notes:</h5>
+          <ul>
+            {selectedNotes.map((note, index) => (
+              <li key={index}>
+                {note}{" "}
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleRemoveNote(index)}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
      
+      <button className="btn btn-success" onClick={handleCreateNotes}>
+        Create Notes
+      </button>
+
+      
+      <Link to={`/final-quotation/${id}`} className="btn btn-primary mx-4">
+        Back to Final Quotation
+      </Link>
     </div>
   );
 };
 
 export default CreateNotes;
-

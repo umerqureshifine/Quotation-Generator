@@ -11,7 +11,8 @@ const DeleteNotes = () => {
  
 
   const handleDeleteNote = async (noteId) => {
-    try {
+    const isConfirmed = window.confirm("Are you sure you want to delete this Notes?");
+   if(isConfirmed){ try {
       const response = await axios.delete(`http://localhost:9000/api/notes/${noteId}`);
 
       if (response.status === 200) {
@@ -21,7 +22,8 @@ const DeleteNotes = () => {
       }
     } catch (error) {
       console.error('Error deleting note:', error);
-    }
+    } 
+  }
   };
 
   const fetchNotes = async () => {

@@ -84,6 +84,7 @@ const Quotation = async (req, res) => {
 
 
 
+
 const deleteQuotation = async (req, res) => {
   try {
     const { id } = req.params;
@@ -95,6 +96,19 @@ const deleteQuotation = async (req, res) => {
           reject(err);
         } else {
           resolve();
+        }
+      });
+    });
+
+    // Delete notes associated with the quotation
+    const sqlDeleteNotes = "DELETE FROM notes WHERE quotation_id = ?";
+    await new Promise((resolve, reject) => {
+      db.query(sqlDeleteNotes, [id], (err, result) => {
+        if (err) {
+          // Rollback the transaction if an error occurs
+          db.rollback(() => reject(err));
+        } else {
+          resolve(result);
         }
       });
     });
@@ -139,14 +153,13 @@ const deleteQuotation = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Quotation and associated services deleted successfully",
+      message: "Quotation, associated notes, and services deleted successfully",
     });
   } catch (error) {
     console.error("Error processing request:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 
 
@@ -192,6 +205,78 @@ const Quotationviaid = (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+const addServices = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quotation_name, services } = req.body;
+
+    if (!id || !quotation_name || !services || services.length === 0) {
+      return res.status(400).json({ error: 'Quotation ID, name, and services are required' });
+    }
+
+    const servicesValues = services.map((service) => [
+      id,
+      quotation_name,
+      service.service_type,
+      service.service_description,
+      service.actual_price,
+      service.offer_price,
+    ]);
+
+    const sql = 'INSERT INTO services_data (quotation_id, quotation_name, service_type, service_description, actual_price, offer_price) VALUES ?';
+
+    await new Promise((resolve, reject) => {
+      db.query(sql, [servicesValues], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+
+    res.status(201).json({ success: true, message: 'Services added successfully' });
+  } catch (error) {
+    console.error('Error adding services:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
+
+
+
+const deleteService = async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+
+    // Implement logic to delete the service with the specified ID from your database
+    const result = await new Promise((resolve, reject) => {
+      db.query('DELETE FROM services_data WHERE service_id = ?', [serviceId], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+
+    // Check if a row was affected to determine if the service was found and deleted
+    if (result.affectedRows > 0) {
+      res.status(200).json({ success: true, message: 'Service deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Service not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting service:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
 
 
 
@@ -291,19 +376,7 @@ const updateServices = async (req, res) => {
   }
 };
 
-// const Notes = (req, res) => {
-//   const { noteText, quotationId } = req.body;
 
-//   const sql = 'INSERT INTO notes (note_text, quotation_id) VALUES (?, ?)';
-//   db.query(sql, [noteText, quotationId], (err, result) => {
-//     if (err) {
-//       console.error('Error inserting note:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     } else {
-//       res.status(201).json({ id: result.insertId });
-//     }
-//   });
-// };
 const Notes = (req, res) => {
   const { noteTexts, quotationId } = req.body;
 
@@ -355,9 +428,25 @@ const deleteNote = (req, res) => {
 };
 
 
+const getnotes_text = (req, res) => {
+  const sql = 'SELECT notes_text FROM notes_data';
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Error fetching notes:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      const notes = result.map((row) => row.notes_text);
+      res.json(notes);
+    }
+  });
+};
 
 
 
 
-module.exports = { Quotation, GetQuotation, Quotationviaid, GetServices,deleteQuotation,updateServices,Notes,getNotes,deleteNote};
+
+module.exports = { Quotation, GetQuotation, Quotationviaid,addServices,deleteService, GetServices,deleteQuotation,updateServices,Notes,getNotes,
+  getnotes_text,
+  deleteNote};
 
