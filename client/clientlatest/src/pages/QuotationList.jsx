@@ -9,7 +9,7 @@
 //     // Fetch your list of quotations from your API
 //     const fetchQuotations = async () => {
 //       try {
-//         const response = await axios.get("https://quotation.queuemanagementsystemdg.com/api/quotation");
+//         const response = await axios.get("http://localhost:9000/api/quotation");
 //         setQuotations(response.data);
 //       } catch (error) {
 //         console.error("Error fetching quotations:", error);
@@ -50,7 +50,7 @@ const QuotationList = () => {
     // Fetch your list of quotations from your API
     const fetchQuotations = async () => {
       try {
-        const response = await axios.get("https://quotation.queuemanagementsystemdg.com/api/quotation");
+        const response = await axios.get("http://localhost:9000/api/quotation");
         setQuotations(response.data);
       } catch (error) {
         console.error("Error fetching quotations:", error);

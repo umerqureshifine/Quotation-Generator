@@ -9,7 +9,7 @@ function Header({ companyName, quotationName }) {
   // useEffect(() => {
   //   const fetchImages = async () => {
   //     try {
-  //       const response = await axios.get('https://quotation.queuemanagementsystemdg.com/api/company-header-footer/:CompanyName');
+  //       const response = await axios.get('http://localhost:9000/api/company-header-footer/:CompanyName');
 
   //       if (response.status === 200) {
   //         const { header_img} = response.data;
@@ -32,7 +32,7 @@ function Header({ companyName, quotationName }) {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/company-header-footer/${companyName}`);
+        const response = await axios.get(`http://localhost:9000/api/company-header-footer/${companyName}`);
   
         if (response.status === 200) {
           const { header_img } = response.data;

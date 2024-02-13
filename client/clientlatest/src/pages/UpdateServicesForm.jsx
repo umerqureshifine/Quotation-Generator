@@ -7,7 +7,7 @@ const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError }) => 
 
   const fetchServices = async () => {
     try {
-      const response = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/quotation/${quotationId}`);
+      const response = await axios.get(`http://localhost:9000/api/quotation/${quotationId}`);
       setServices(response.data);
 
     } catch (error) {
@@ -18,7 +18,7 @@ const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError }) => 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`https://quotation.queuemanagementsystemdg.com/api/quotation/${quotationId}`, {
+      const response = await axios.put(`http://localhost:9000/api/quotation/${quotationId}`, {
         services,
 
       });
@@ -37,7 +37,24 @@ const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError }) => 
 
   const handleServiceChange = (index, field, value) => {
     const newServices = [...services];
-    newServices[index][field] = value;
+    // newServices[index][field] = value;
+     
+    if (field === 'service_type' && value === 'Complimentary') {
+      // If the service type is 'Complimentary', disable the offer price and set it to 0
+      newServices[index]['offer_price'] = 0;
+    }
+  
+    if (field === 'offer_price' && newServices[index].service_type === 'Complimentary') {
+      // If the service type is 'Complimentary', set offer price to 0 and disable the input
+      newServices[index][field] = 0;
+    } else if (field === 'offer_price' && value > newServices[index].actual_price) {
+      // If offer price is greater than actual price, set it to actual price and alert
+      alert("Offer price cannot be greater than actual price");
+      newServices[index][field] = newServices[index].actual_price;
+    } else {
+      // Otherwise, update the field normally
+      newServices[index][field] = value;
+    }
     setServices(newServices);
   };
 
@@ -53,6 +70,20 @@ const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError }) => 
         <div key={index}>
           <div className="row mt-3 g-2">
           <h6>Service {index + 1}</h6>
+          <div className="col-lg-12 ">
+          <label className="form-check-label">
+          Service Type:
+
+            <input
+            className='form-control'
+              type="text"
+              value={service.service_type}
+              onChange={(e) => handleServiceChange(index, "service_type", e.target.value)}
+             
+            />
+          </label>
+          </div>
+                 
           <div className="col-lg-2 ">
           <label className="form-check-label">
           Subscription:
@@ -70,12 +101,12 @@ const UpdateServicesForm = ({ quotationId, onUpdateSuccess, onUpdateError }) => 
             
           <div className="col-lg-2 ">
           <label className="form-check-label">
-            Service Type:
+            Service Name:
             <input
             className='form-control'
               type="text"
-              value={service.service_type}
-              onChange={(e) => handleServiceChange(index, 'service_type', e.target.value)}
+              value={service.service_name}
+              onChange={(e) => handleServiceChange(index, 'service_name', e.target.value)}
              
             />
           </label>

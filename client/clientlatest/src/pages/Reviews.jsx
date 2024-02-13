@@ -29,7 +29,7 @@ function Reviews({ handleClose }) {
   const fetchQuotations = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/quotation/${id}`
+        `http://localhost:9000/api/quotation/${id}`
       );
 
       if (response.status === 200) {
@@ -48,7 +48,7 @@ function Reviews({ handleClose }) {
   const fetchNotes = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/notes/${id}`
+        `http://localhost:9000/api/notes/${id}`
       );
 
       if (response.status === 200) {
@@ -61,7 +61,7 @@ function Reviews({ handleClose }) {
   const fetchHeaderImage = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/${id}/header`
+        `http://localhost:9000/api/${id}/header`
       );
 
       if (response.status === 200) {
@@ -160,6 +160,8 @@ function Reviews({ handleClose }) {
         {renderServiceTables("Yearly", "Paid")}
         {renderServiceTables("One Time", "Paid")}
         {renderServiceTables("Quarterly", "Paid")}
+        {renderServiceTables("Half Yearly", "Paid")}
+        {renderServiceTables("Weekly", "Paid")}
         {/* Add similar calls for other subscription frequencies for Paid services */}
       </>
     );
@@ -172,6 +174,8 @@ function Reviews({ handleClose }) {
         {renderServiceTables("Yearly", "Complimentary")}
         {renderServiceTables("One Time", "Complimentary")}
         {renderServiceTables("Quarterly", "Complimentary")}
+        {renderServiceTables("Half Yearly", "Complimentary")}
+        {renderServiceTables("Weekly", "Complimentary")}
         {/* Add similar calls for other subscription frequencies for Complimentary services */}
       </>
     );

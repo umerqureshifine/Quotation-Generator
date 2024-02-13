@@ -11,7 +11,7 @@ function HeaderFooterImages() {
     // Fetch company names from the backend
     const fetchCompanyNames = async () => {
       try {
-        const response = await axios.get('https://quotation.queuemanagementsystemdg.com/api/header-footer-images/company-names');
+        const response = await axios.get('http://localhost:9000/api/header-footer-images/company-names');
         if (response.status === 200) {
           setCompanyNames(response.data); // Assuming response.data is an array of company names
         } else {
@@ -32,7 +32,7 @@ function HeaderFooterImages() {
   // Function to fetch header and footer images based on selected company name
   const fetchHeaderFooterImages = async () => {
     try {
-      const response = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/header-footer/${companyName}`);
+      const response = await axios.get(`http://localhost:9000/api/header-footer/${companyName}`);
       if (response.status === 200) {
         const { header_img, footer_img } = response.data;
         setHeaderImage(header_img);

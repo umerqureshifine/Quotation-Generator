@@ -25,7 +25,7 @@ function EditableSeoPayment() {
 
     return (
         <Wrapper>
-          
+            <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
             <table className='table table-bordered'>
                 <thead>
                     <tr>
@@ -59,7 +59,7 @@ function EditableSeoPayment() {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table></div>
             <button className='btn btn-success btn-print mx-3' onClick={handleAddRow}>Add Row</button>
         </Wrapper>
     );

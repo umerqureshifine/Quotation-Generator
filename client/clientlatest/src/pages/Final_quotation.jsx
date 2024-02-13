@@ -25,7 +25,7 @@ function Final_quotation() {
   const fetchQuotations = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/quotation/${id}`
+        `http://localhost:9000/api/quotation/${id}`
       );
 
       if (response.status === 200) {
@@ -51,7 +51,7 @@ function Final_quotation() {
 
   const fetchNotes = async () => {
     try {
-      const response = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/notes/${id}`);
+      const response = await axios.get(`http://localhost:9000/api/notes/${id}`);
 
       if (response.status === 200) {
         setNotes(response.data);
@@ -64,7 +64,7 @@ function Final_quotation() {
   const fetchHeaderImage = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/${id}/header`
+        `http://localhost:9000/api/${id}/header`
       );
 
       if (response.status === 200) {
@@ -80,7 +80,7 @@ function Final_quotation() {
   const fetchFooterImage = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/${id}/footer`
+        `http://localhost:9000/api/${id}/footer`
       );
 
       if (response.status === 200) {
@@ -107,7 +107,7 @@ function Final_quotation() {
     if (isConfirmed) {
       try {
         const response = await axios.delete(
-          `https://quotation.queuemanagementsystemdg.com/api/quotation/${id}`
+          `http://localhost:9000/api/quotation/${id}`
         );
 
         if (response.status === 200) {
@@ -151,7 +151,7 @@ function Final_quotation() {
       try {
         // Make an API call to delete the service
         const response = await axios.delete(
-          `https://quotation.queuemanagementsystemdg.com/api/services/${serviceId}`
+          `http://localhost:9000/api/services/${serviceId}`
         );
 
         if (response.status === 200) {
@@ -171,7 +171,7 @@ function Final_quotation() {
     if (isConfirmed) {
       try {
         const response = await axios.delete(
-          `https://quotation.queuemanagementsystemdg.com/api/header/${id}`
+          `http://localhost:9000/api/header/${id}`
         );
 
         if (response.status === 200) {
@@ -190,7 +190,7 @@ function Final_quotation() {
     if (isConfirmed) {
       try {
         const response = await axios.delete(
-          `https://quotation.queuemanagementsystemdg.com/api/footer/${id}`
+          `http://localhost:9000/api/footer/${id}`
         );
 
         if (response.status === 200) {
@@ -210,9 +210,6 @@ function Final_quotation() {
   const handleAddFooterImage = () => {
     navigate(`/addimage/${id}/footer`);
   };
-  const handleReview = () => {
-    navigate(`/review/${id}`);
-  };
 
  
 
@@ -223,7 +220,7 @@ function Final_quotation() {
     fetchFooterImage();
   }, []);
 
-  const handleReviewModal = () => {
+  const handleReview = () => {
     navigate(`/review/${id}`);
     window.scrollTo(0, 0);
   };
@@ -323,7 +320,7 @@ function Final_quotation() {
 
 <button className="btn btn-success mt-2 mx-3 mb-2">
             {" "}
-            <Link to="/" className="text-white">
+            <Link to="/" className="text-white text-decoration-none">
               {" "}
               <i className="bi bi-arrow-return-left mx-1"></i>Back
             </Link>
@@ -346,14 +343,14 @@ function Final_quotation() {
             />
           )}
           <button className="btn btn-primary mx-2" onClick={handleAddServices}>
-            Add Serrvices
+            Add Services
           </button>
           <div className="container-fluid">
             
             <div className="container-fluid mt-3">
             <h4>Paid Services</h4>
             <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
-            <table className="table table-bordered mt-3">
+            <table className="table table-bordered ">
               <thead>
                 <tr>
                   <th>Sr.No</th>
@@ -397,7 +394,7 @@ function Final_quotation() {
           <div className="container-fluid mt-3">
             <h4>Complimentary Services</h4>
             <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
-            <table className="table table-bordered mt-3">
+            <table className="table table-bordered ">
               <thead>
                 <tr>
                   <th>Sr.No</th>
@@ -440,17 +437,11 @@ function Final_quotation() {
             <button className="btn btn-outline-danger" onClick={handleDelete}>
               Delete
             </button>
-              <button className="btn btn-success  mx-3" onClick={handleReviewModal}>
+              <button className="btn btn-success  mx-3" onClick={handleReview}>
         Reviews
       </button>
 
-      {showReviewModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <Reviews handleClose={handleReviewModal} />
-          </div>
-        </div>
-      )}
+   
 
             <div className="note mt-3">
               <h5 className=" fw-bold">Notes:-</h5>
@@ -518,31 +509,7 @@ function Final_quotation() {
           </div>
           <div className="container-fluid ">
           <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
-            {/* <table className="table table-bordered mt-3">
-              <thead>
-                <tr>
-                  <th>Sr.No</th>
-                  <th colSpan="3" className="th text-center">
-                    Payment Details
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>For Payment (with GST18%) : DOAGuru InfoSystems</td>
-                  <td>SBIN0004677</td>
-                  <td>38666325192</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>For TDS Payment : DOAGuru IT Solutions</td>
-                  <td>HDFC0000224</td>
-                  <td>50200074931981</td>
-                </tr>
-               
-              </tbody>
-            </table> */}
+            
 
 
             </div>

@@ -36,7 +36,7 @@ function Print_Page() {
   const fetchQuotations = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/quotation/${id}`
+        `http://localhost:9000/api/quotation/${id}`
       );
 
       if (response.status === 200) {
@@ -55,7 +55,7 @@ function Print_Page() {
   const fetchNotes = async () => {
     try {
       const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/notes/${id}`
+        `http://localhost:9000/api/notes/${id}`
       );
 
       if (response.status === 200) {
@@ -65,21 +65,7 @@ function Print_Page() {
       console.error("Error fetching notes:", error);
     }
   };
-  const fetchHeaderImage = async () => {
-    try {
-      const response = await axios.get(
-        `https://quotation.queuemanagementsystemdg.com/api/${id}/header`
-      );
-
-      if (response.status === 200) {
-        // Assuming your response.data structure contains the image URL
-        setHeaderImagePath(response.data[0]?.file_path);
-        console.log("Footer Image URL:", headerImagePath);
-      }
-    } catch (error) {
-      console.error("Error fetching footer image:", error);
-    }
-  };
+ 
 
 
 
@@ -143,7 +129,7 @@ const handlePrintPage = () => {
         <div className="mt-1">
           <h5 className="fw-bold">{`${serviceTypeTitle} Services - ${subscriptionFrequency}`}</h5>
           <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
-          <table className="table table-bordered mt-3">
+          <table className="table table-bordered">
             <thead>
               <tr>
                 <th>Sr.No</th>
@@ -183,7 +169,7 @@ const handlePrintPage = () => {
     // Fetch company names from the backend
     const fetchCompanyNames = async () => {
       try {
-        const response = await axios.get('https://quotation.queuemanagementsystemdg.com/api/header-footer-images/company-names');
+        const response = await axios.get('http://localhost:9000/api/header-footer-images/company-names');
         if (response.status === 200) {
           setCompanyNames(response.data); // Assuming response.data is an array of company names
         } else {
@@ -214,6 +200,8 @@ const handlePrintPage = () => {
         {renderServiceTables("Yearly", "Paid")}
         {renderServiceTables("One Time", "Paid")}
         {renderServiceTables("Quarterly", "Paid")}
+        {renderServiceTables("Half Yearly", "Paid")}
+        {renderServiceTables("Weekly", "Paid")}
         {/* Add similar calls for other subscription frequencies for Paid services */}
       </>
     );
@@ -226,6 +214,8 @@ const handlePrintPage = () => {
         {renderServiceTables("Yearly", "Complimentary")}
         {renderServiceTables("One Time", "Complimentary")}
         {renderServiceTables("Quarterly", "Complimentary")}
+        {renderServiceTables("Half Yearly", "Complimentary")}
+        {renderServiceTables("Weekly", "Complimentary")}
         {/* Add similar calls for other subscription frequencies for Complimentary services */}
       </>
     );
@@ -249,12 +239,24 @@ const handlePrintPage = () => {
     const websiteDevelopmentService = quotations.find(
       (service) => service.service_name === "Website Design & Development"
     );
+    const moblieDevelopmentService = quotations.find(
+      (service) => service.service_name === "Mobile Application Development (Android & IOS)"
+    );
+    const softwareDevelopmentService = quotations.find(
+      (service) => service.service_name === "Software Development"
+    );
+    const graphicDesiginService = quotations.find(
+      (service) => service.service_name === "Graphic & Logo Designing"
+    );
+    const videoEditingService = quotations.find(
+      (service) => service.service_name === "Video Editing"
+    );
   
     // Check if the service exists
-    if (websiteDevelopmentService) {
+    if (websiteDevelopmentService || moblieDevelopmentService || softwareDevelopmentService || graphicDesiginService || videoEditingService) {
       return (
         <div className=" mt-2">
-          <h4 className="mt-4">Payment Conditions for Website Development</h4>
+          <h4 className="mt-4">Payment Conditions for Website/Moblie/Software Development /Graphic & Logo Designing/Video Editing</h4>
           {/* <table className="table table-bordered mt-3">
             <thead>
               <tr>
@@ -298,12 +300,39 @@ const handlePrintPage = () => {
       (service) => service.service_name === "Social Media Optimization (SMO)",
       
     );
+    const bulkwhatsappService = quotations.find(
+      (service) => service.service_name === "Bulk WhatsApp",
+      
+    );
+    const youtubeService = quotations.find(
+      (service) => service.service_name === "YouTube Optimization",
+      
+    );
+    const GMBService = quotations.find(
+      (service) => service.service_name === "Google My Business Assist",
+      
+    );
+    const GoogleReviewsService = quotations.find(
+      (service) => service.service_name === "Google Reviews",
+      
+    );
+    const GooglePPCAdsService = quotations.find(
+      (service) => service.service_name === "Google PPC Ads",
+      
+    );
+    const websitemodifyService = quotations.find(
+      (service) => service.service_name === "Website Modification & Maintenance",
+      
+    );
+  
   
     // Check if the service exists
-    if (seoService || smmService || smoService) {
+    if (seoService || smmService || smoService || bulkwhatsappService || youtubeService || GMBService || GoogleReviewsService || GooglePPCAdsService || websitemodifyService) {
       return (
         <div className=" mt-2">
-          <h4 className="mt-4">Payment Conditions for SEO, SMO, and SMM</h4>
+          <h4 className="mt-4">Payment Conditions for SEO/SMO/SMM/Bulk WhatsApp/YouTube Optimization/GMB/Google Reviews/Google PPC Ads/Website
+Modification &
+Maintenance</h4>
           {/* <table className="table table-bordered mt-3">
             <thead>
               <tr>
@@ -348,12 +377,18 @@ const handlePrintPage = () => {
 
        <div className="container-fluid">
           <h1 className="btn-print">Select Company and View Header/Footer Images</h1>
-          <select className="form-select btn-print" value={selectedCompany} onChange={handleCompanyNameChange} required>
+          {/* <select className="form-select btn-print" value={selectedCompany} onChange={handleCompanyNameChange} required>
             <option value="">Select Company</option>
             {companyNames.map((company, index) => (
               <option key={index} value={company}>{company}</option>
             ))}
-          </select>
+          </select> */}
+          <select className="form-select btn-print" value={selectedCompany} onChange={handleCompanyNameChange} required>
+      <option value="">Select Company</option>
+      {companyNames.map((company, index) => (
+        <option key={index} value={company}>{company}</option>
+      ))}
+    </select>
 {/* 
           <button className="btn btn-outline-info mt-2 mx-1 btn-print mb-1" onClick={handleChangeHeaderFooter}>
             {" "}
@@ -380,7 +415,7 @@ const handlePrintPage = () => {
        
        
 
-<div className="size mt-5"  >
+<div className="size  "  >
 
 
  
@@ -412,11 +447,76 @@ const handlePrintPage = () => {
 
     
 
-        <div className=" mb-3">
+        {/* <div className=" mb-3">
         <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
-         
+        <table className="table table-bordered mt-3">
+              <thead>
+                <tr>
+                  <th>Sr.No</th>
+                  <th colSpan="3" className="th text-center">
+                    Payment Details
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>For Payment (with GST18%) : DOAGuru InfoSystems</td>
+                  <td>SBIN0004677</td>
+                  <td>38666325192</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>For TDS Payment : DOAGuru IT Solutions</td>
+                  <td>HDFC0000224</td>
+                  <td>50200074931981</td>
+                </tr>
+               
+              </tbody>
+            </table>
           </div>
-        </div>
+        </div> */}
+         <div className=" mb-3">
+      <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
+        <table className="table table-bordered mt-3">
+          <thead>
+            <tr>
+              
+              <th colSpan="3" className="th text-center">
+                Payment Details
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedCompany === 'Doaguru InfoSystems' && (
+              <tr colSpan="3" >
+                
+              
+                <td>For Payment (with GST18%) : DOAGuru InfoSystems</td>
+                <td>SBIN0004677</td>
+                <td>38666325192</td>
+              </tr>
+            )}
+            {selectedCompany === 'Doaguru IT Solutions' && (
+              <tr>
+           
+           <td width={1000}>
+      <input
+        type="text"
+        defaultValue="For TDS Payment : DOAGuru IT Solutions"
+        className="form-control"
+       style={{border:"none"}}
+      />
+    </td>
+                <td>HDFC0000224</td>
+                <td>50200074931981</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
      
 
         <div className="container"><button className="btn btn-success mb-3  mt-2  w-100 p-3   btn-print" onClick={handlePrintPage}>

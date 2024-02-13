@@ -10,7 +10,7 @@ function Footer({ companyName }) {
   // useEffect(() => {
   //   const fetchImages = async () => {
   //     try {
-  //       const response = await axios.get('https://quotation.queuemanagementsystemdg.com/api/header-footer-images');
+  //       const response = await axios.get('http://localhost:9000/api/header-footer-images');
 
   //       if (response.status === 200) {
   //         const { footer_img } = response.data;
@@ -32,7 +32,7 @@ function Footer({ companyName }) {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/company-header-footer/${companyName}`);
+        const response = await axios.get(`http://localhost:9000/api/company-header-footer/${companyName}`);
   
         if (response.status === 200) {
           const { footer_img } = response.data;

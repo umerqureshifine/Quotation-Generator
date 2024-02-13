@@ -34,7 +34,7 @@
 //       formData.append('header_img', headerImage);
 //       formData.append('footer_img', footerImage);
 
-//       const response = await axios.post('https://quotation.queuemanagementsystemdg.com/api/upload-header-footer', formData, {
+//       const response = await axios.post('http://localhost:9000/api/upload-header-footer', formData, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data',
 //         },
@@ -128,7 +128,7 @@
 //       formData.append('footer_img', footerImage);
 //       formData.append('company_name', companyName); // Add company name to form data
 
-//       const response = await axios.post('https://quotation.queuemanagementsystemdg.com/api/upload-header-footer', formData, {
+//       const response = await axios.post('http://localhost:9000/api/upload-header-footer', formData, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data',
 //         },
@@ -206,7 +206,7 @@ function Set_Header_Footer() {
     // Fetch company names from the backend
     const fetchCompanyNames = async () => {
       try {
-        const response = await axios.get('https://quotation.queuemanagementsystemdg.com/api/header-footer-images/company-names');
+        const response = await axios.get('http://localhost:9000/api/header-footer-images/company-names');
         
         if (response.status === 200) {
           setCompanyNames(response.data); // Assuming response.data is an array of company names
@@ -236,7 +236,7 @@ function Set_Header_Footer() {
       formData.append('footer_img', footerImage);
       formData.append('company_name', companyName);
 
-      const response = await axios.post('https://quotation.queuemanagementsystemdg.com/api/upload-header-footer', formData, {
+      const response = await axios.post('http://localhost:9000/api/upload-header-footer', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -262,7 +262,7 @@ function Set_Header_Footer() {
 
   // const fetchHeaderFooterImages = async () => {
   //   try {
-  //     const response = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/header-footer/${selectedCompany}`);
+  //     const response = await axios.get(`http://localhost:9000/api/header-footer/${selectedCompany}`);
   //     if (response.status === 200) {
   //       const { header_img, footer_img } = response.data;
   //       setHeaderImage(header_img);

@@ -81,8 +81,7 @@ const header_footer_img = async (req, res) => {
     }
 
     const { header_img, footer_img} = req.files;
-    const { company_name } = req.body;
-
+ 
     const headerImagePath = 'http://localhost:9000/uploads/' + header_img[0].filename;
     const footerImagePath = 'http://localhost:9000/uploads/' + footer_img[0].filename;
 
@@ -141,6 +140,28 @@ const company_name_header_footer = async (req, res) => {
   }
 };
 
+
+
+
+const fetchcompanyname = async(req,res) =>{
+  try {
+    const query = 'SELECT DISTINCT company_name FROM quotation_header_footer'; // Query to retrieve unique company names
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Error fetching company names:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        const companyNames = results.map(row => row.company_name); // Extract company names from the query results
+        res.status(200).json(companyNames); // Send company names as JSON response
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching company names:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+
 const get_header_footer = async (req, res) => {
   // try {
   //   const companyName = req.params.companyName;
@@ -186,26 +207,6 @@ const get_header_footer = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-
-const fetchcompanyname = async(req,res) =>{
-  try {
-    const query = 'SELECT DISTINCT company_name FROM quotation_header_footer'; // Query to retrieve unique company names
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Error fetching company names:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        const companyNames = results.map(row => row.company_name); // Extract company names from the query results
-        res.status(200).json(companyNames); // Send company names as JSON response
-      }
-    });
-  } catch (error) {
-    console.error('Error fetching company names:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-}
-
 
 
 

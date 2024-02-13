@@ -75,7 +75,7 @@
 //         };
 //       });
   
-//       const response = await axios.post("https://quotation.queuemanagementsystemdg.com/api/quotation", {
+//       const response = await axios.post("http://localhost:9000/api/quotation", {
 //         quotation_name: quotationName,
 //         services: servicesToSave,
 //       });
@@ -95,7 +95,7 @@
 
 //   const getServicelist = async () => {
 //     try {
-//       const res = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/services`);
+//       const res = await axios.get(`http://localhost:9000/api/services`);
 //       console.log(res.data.services);
 //       setServiceslist(res.data.services);
 //     } catch (error) {
@@ -426,7 +426,7 @@ const QuotationForm1 = () => {
       });
 
       const response = await axios.post(
-        "https://quotation.queuemanagementsystemdg.com/api/quotation",
+        "http://localhost:9000/api/quotation",
         {
           quotation_name: quotationName,
           services: servicesToSave,
@@ -446,7 +446,7 @@ const QuotationForm1 = () => {
 
   const getServicelist = async () => {
     try {
-      const res = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/services`);
+      const res = await axios.get(`http://localhost:9000/api/services`);
       console.log(res.data.services);
       setServiceslist(res.data.services);
     } catch (error) {

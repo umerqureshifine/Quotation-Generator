@@ -25,8 +25,8 @@ function EditablePaymentTable() {
 
     return (
         <Wrapper>
-          
-            <table className='table table-bordered mt-2'>
+            <div className="" style={{ maxHeight: "700px", overflowY: "auto" }}>
+            <table className='table table-bordered mt-2' style={{ maxHeight: "700px", overflowY: "auto" }}>
                 <thead>
                     <tr>
                         <th colSpan="2">Payment Installment</th>
@@ -59,7 +59,7 @@ function EditablePaymentTable() {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table></div>
             <button className=' btn btn-success btn-print mx-3' onClick={handleAddRow}>Add Row</button>
         </Wrapper>
     );

@@ -31,7 +31,24 @@ const Addservices = () => {
 
   const handleServiceChange = (index, field, value) => {
     const newServices = [...services];
-    newServices[index][field] = value;
+    // newServices[index][field] = value;
+     
+    if (field === 'service_type' && value === 'Complimentary') {
+      // If the service type is 'Complimentary', disable the offer price and set it to 0
+      newServices[index]['offer_price'] = 0;
+    }
+  
+    if (field === 'offer_price' && newServices[index].service_type === 'Complimentary') {
+      // If the service type is 'Complimentary', set offer price to 0 and disable the input
+      newServices[index][field] = 0;
+    } else if (field === 'offer_price' && value > newServices[index].actual_price) {
+      // If offer price is greater than actual price, set it to actual price and alert
+      alert("Offer price cannot be greater than actual price");
+      newServices[index][field] = newServices[index].actual_price;
+    } else {
+      // Otherwise, update the field normally
+      newServices[index][field] = value;
+    }
     setServices(newServices);
   };
 
@@ -92,7 +109,7 @@ const Addservices = () => {
       });
 
       const response = await axios.post(
-        `https://quotation.queuemanagementsystemdg.com/api/services/${id}`,
+        `http://localhost:9000/api/services/${id}`,
         {
           quotation_name: quotationName,
           services: servicesToSave,
@@ -112,7 +129,7 @@ const Addservices = () => {
 
   const getQuotationName = async () => {
     try {
-      const response = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/quotation/${id}`);
+      const response = await axios.get(`http://localhost:9000/api/quotation/${id}`);
       setQuotationName(response.data[0].quotation_name);
     } catch (error) {
       console.log('Error fetching quotation name:', error);
@@ -121,7 +138,7 @@ const Addservices = () => {
 
   const getServicelist = async () => {
     try {
-      const res = await axios.get(`https://quotation.queuemanagementsystemdg.com/api/services`);
+      const res = await axios.get(`http://localhost:9000/api/services`);
       setServiceslist(res.data.services);
     } catch (error) {
       console.log('Error fetching services list:', error);
