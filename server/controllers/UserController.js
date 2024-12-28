@@ -14,21 +14,83 @@ dotenv.config();
 
 
 
+// const Quotation = async (req, res) => {
+//   try {
+//     const {
+//       quotation_name,
+//       services, // an array of services
+//     } = req.body;
+
+//     if (!quotation_name || !services || services.length === 0) {
+//       return res.status(400).json({ error: "Quotation name and services are required" });
+//     }
+
+//     // Insert quotation
+//     const sqlQuotation = "INSERT INTO quotations_data (quotation_name) VALUES (?)";
+//     const resultQuotation = await new Promise((resolve, reject) => {
+//       db.query(sqlQuotation, [quotation_name], (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//     });
+
+//     // Get quotation ID and name
+//     const quotationId = resultQuotation.insertId;
+//     const quotationName = quotation_name;
+
+//     // Insert services with the associated quotation_id and quotation_name
+//     const sqlServices ="INSERT INTO services_data (quotation_id, quotation_name, service_type, service_description, actual_price, offer_price, subscription_frequency) VALUES ?";
+//     const servicesValues = services.map((service) => [
+//       quotationId,
+//       quotationName,
+//       service.service_type,
+//       service.service_description,
+//       service.actual_price,
+//       service.offer_price,
+//       service.subscription_frequency, 
+//     ]);
+
+//     await new Promise((resolve, reject) => {
+//       db.query(sqlServices, [servicesValues], (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//     });
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Quotation and services added successfully",
+//       quotation: {
+//         id: quotationId,
+//         quotation_name: quotationName,
+//       },
+//     });
+
+//   } catch (error) {
+//     console.error("Error processing request:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
 const Quotation = async (req, res) => {
   try {
-    const {
-      quotation_name,
-      services, // an array of services
-    } = req.body;
+    const { quotation_name, services } = req.body;
+    const { user_id } = req.body; // Assuming user_id is retrieved from the authenticated user
 
     if (!quotation_name || !services || services.length === 0) {
       return res.status(400).json({ error: "Quotation name and services are required" });
     }
 
-    // Insert quotation
-    const sqlQuotation = "INSERT INTO quotations_data (quotation_name) VALUES (?)";
+    // Insert quotation with user_id
+    const sqlQuotation = "INSERT INTO quotations_data (quotation_name, user_id) VALUES (?, ?)";
     const resultQuotation = await new Promise((resolve, reject) => {
-      db.query(sqlQuotation, [quotation_name], (err, result) => {
+      db.query(sqlQuotation, [quotation_name, user_id], (err, result) => {
         if (err) {
           reject(err);
         } else {
@@ -42,15 +104,16 @@ const Quotation = async (req, res) => {
     const quotationName = quotation_name;
 
     // Insert services with the associated quotation_id and quotation_name
-    const sqlServices = "INSERT INTO services_data (quotation_id, quotation_name, service_type, service_description, actual_price, offer_price) VALUES ?";
-
+    const sqlServices = "INSERT INTO services_data (quotation_id, quotation_name, service_type, service_name, service_description, actual_price, offer_price, subscription_frequency) VALUES ?";
     const servicesValues = services.map((service) => [
       quotationId,
       quotationName,
       service.service_type,
+      service.service_name,
       service.service_description,
       service.actual_price,
       service.offer_price,
+      service.subscription_frequency,
     ]);
 
     await new Promise((resolve, reject) => {
@@ -71,7 +134,6 @@ const Quotation = async (req, res) => {
         quotation_name: quotationName,
       },
     });
-
   } catch (error) {
     console.error("Error processing request:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -165,12 +227,57 @@ const deleteQuotation = async (req, res) => {
 
 
 
-const GetQuotation = async (req, res) => {
+// const GetQuotation = async (req, res) => {
+//   try {
+//     const sql = "SELECT * FROM quotations_data ORDER BY quotation_id DESC";
+
+//     const quotations = await new Promise((resolve, reject) => {
+//       db.query(sql, (err, results) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(results);
+//         }
+//       });
+//     });
+
+//     res.status(200).json(quotations);
+//   } catch (error) {
+//     console.error("Error processing request:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
+  const GetQuotation = async (req, res) => {
+    try {
+      const { UserId } = req.params; // Extracting UserId from req.params
+      const sql = "SELECT * FROM quotations_data WHERE user_id = ? ORDER BY quotation_id DESC";
+
+      const quotations = await new Promise((resolve, reject) => {
+        db.query(sql, [UserId], (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        });
+      });
+
+      res.status(200).json(quotations);
+    } catch (error) {
+      console.error("Error processing request:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  };
+
+
+ const  GetQuotationName = async (req, res) => {
   try {
-    const sql = "SELECT * FROM quotations_data";
+    const { quotationId } = req.params; // Extracting UserId from req.params
+    const sql = "SELECT * FROM quotations_data WHERE quotation_id = ? ";
 
     const quotations = await new Promise((resolve, reject) => {
-      db.query(sql, (err, results) => {
+      db.query(sql, [quotationId], (err, results) => {
         if (err) {
           reject(err);
         } else {
@@ -185,6 +292,194 @@ const GetQuotation = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+  const UpdateQuotationName = async (req, res) => {
+    try {
+        const { quotationId } = req.params; // Extracting quotationId from req.params
+        const { newName } = req.body; // Extracting new quotation name from req.body
+
+        // Construct SQL query to update the quotation name
+        const sql = "UPDATE quotations_data SET quotation_name = ? WHERE quotation_id = ?";
+
+        // Execute the update query asynchronously
+        await new Promise((resolve, reject) => {
+            db.query(sql, [newName, quotationId], (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+        const sql2 = "UPDATE services_data SET quotation_name = ? WHERE quotation_id = ?";
+
+        // Execute the update query asynchronously
+        await new Promise((resolve, reject) => {
+            db.query(sql2, [newName, quotationId], (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+
+        res.status(200).json({ message: "Quotation name updated successfully" });
+    } catch (error) {
+        console.error("Error updating quotation name:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+
+
+
+
+
+
+const CopyQuotationData = async (req, res) => {
+  try {
+    const { quotationId } = req.params; // Extract quotationId from req.params
+  
+    // Retrieve the quotation data based on the provided quotation ID
+    const sqlQuotation = "SELECT * FROM quotations_data WHERE quotation_id = ?";
+  
+    // Execute the query asynchronously to fetch the quotation data
+    const [quotation] = await new Promise((resolve, reject) => {
+      db.query(sqlQuotation, [quotationId], (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+    
+    // Check if the quotation data exists
+    if (!quotation) {
+      return res.status(404).json({ error: "Quotation not found" });
+    }
+
+    // Extract the quotation name
+    const newQuotationName = `Copy of ${quotation.quotation_name}`;
+
+    // Insert the copied quotation into the database
+    const result = await db.query("INSERT INTO quotations_data (quotation_name, user_id) VALUES (?, ?)", [newQuotationName, quotation.user_id]);
+
+
+    const sqlgetId = "SELECT * FROM quotations_data WHERE quotation_name = ?";
+    const [getId] = await new Promise((resolve, reject) => {
+      db.query(sqlgetId, [newQuotationName], (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+    const newQuotationId = getId.quotation_id
+    
+
+
+    
+    // Retrieve services associated with the original quotation ID
+    const sqlGetServices = "SELECT * FROM services_data WHERE quotation_id = ?";
+  
+    // Execute the query asynchronously to fetch the services data
+    const services = await new Promise((resolve, reject) => {
+      db.query(sqlGetServices, [quotationId], (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+      // Copy service data associated with the original quotation ID to the new quotation ID
+    const sqlServices = "INSERT INTO services_data (quotation_id, quotation_name, service_type, service_name, service_description, actual_price, offer_price, subscription_frequency) VALUES ?";
+    const servicesValues = services.map((service) => [
+      newQuotationId, // Use the new quotation ID
+      newQuotationName,
+      service.service_type,
+      service.service_name,
+      service.service_description,
+      service.actual_price,
+      service.offer_price,
+      service.subscription_frequency,
+    ]);
+
+    await new Promise((resolve, reject) => {
+      db.query(sqlServices, [servicesValues], (err, result) => {
+        if (err) {
+          console.error("Error copying services data:", err); // Log the error
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+
+ 
+    // SQL query to retrieve notes data associated with the quotation ID
+const sqlNotes = 'SELECT * FROM notes WHERE quotation_id = ?';
+
+// Execute the query asynchronously and retrieve the notes data
+const getNotes = await new Promise((resolve, reject) => {
+  db.query(sqlNotes, [quotationId], (err, results) => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve(results);
+    }
+  });
+});
+
+// Check if notes data is retrieved successfully
+if (!Array.isArray(getNotes)) {
+  console.error('Error fetching notes data:', getNotes);
+  // Handle the error appropriately, such as returning an error response
+} else {
+  // Prepare notes data for insertion
+  const notesValues = getNotes.map(note => [note.note_text, newQuotationId]);
+
+  // SQL query to insert notes data into the database
+  const insertNotesQuery = 'INSERT INTO notes (note_text, quotation_id) VALUES ?';
+
+  // Execute the insertion query
+  db.query(insertNotesQuery, [notesValues], (err, result) => {
+    if (err) {
+      console.error('Error inserting notes data:', err);
+      // Handle the error appropriately, such as returning an error response
+    } else {
+      console.log('Notes data inserted successfully:', result);
+      // Handle the successful insertion, such as returning a success response
+    }
+  });
+}
+
+
+   
+    
+    res.status(200).json({ message: "Quotation and services data copied successfully" });
+  } catch (error) {
+    console.error("Error copying quotation and services data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
 
 const Quotationviaid = (req, res) => {
   try {
@@ -207,6 +502,46 @@ const Quotationviaid = (req, res) => {
 };
 
 
+
+// const addServices = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { quotation_name, services } = req.body;
+
+//     if (!id || !quotation_name || !services || services.length === 0) {
+//       return res.status(400).json({ error: 'Quotation ID, name, and services are required' });
+//     }
+
+//     const servicesValues = services.map((service) => [
+//       id,
+//       quotation_name,
+//       service.service_type,
+//       service.service_name,
+//       service.service_description,
+//       service.actual_price,
+//       service.offer_price, 
+//      service.subscription_frequency, 
+//     ]);
+
+//     const sql = "INSERT INTO services_data (quotation_id, quotation_name, service_type, service_name, service_description, actual_price, offer_price, subscription_frequency) VALUES ?";
+
+//     await new Promise((resolve, reject) => {
+//       db.query(sql, [servicesValues], (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//     });
+
+//     res.status(201).json({ success: true, message: 'Services added successfully' });
+//   } catch (error) {
+//     console.error('Error adding services:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// };
+
 const addServices = async (req, res) => {
   try {
     const { id } = req.params;
@@ -220,12 +555,14 @@ const addServices = async (req, res) => {
       id,
       quotation_name,
       service.service_type,
+      service.service_name,
       service.service_description,
       service.actual_price,
-      service.offer_price,
+      service.offer_price, 
+     service.subscription_frequency, 
     ]);
 
-    const sql = 'INSERT INTO services_data (quotation_id, quotation_name, service_type, service_description, actual_price, offer_price) VALUES ?';
+    const sql = "INSERT INTO services_data (quotation_id, quotation_name, service_type, service_name, service_description, actual_price, offer_price, subscription_frequency) VALUES ?";
 
     await new Promise((resolve, reject) => {
       db.query(sql, [servicesValues], (err, result) => {
@@ -243,8 +580,6 @@ const addServices = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-
 
 
 
@@ -349,17 +684,21 @@ const updateServices = async (req, res) => {
         UPDATE services_data
         SET
           service_type = ?,
+          service_name = ?,
           service_description = ?,
           actual_price = ?,
-          offer_price = ?
+          offer_price = ?,
+          subscription_frequency = ?
         WHERE
           quotation_id = ? AND service_id = ?`;
 
       const values = [
         service.service_type,
+        service.service_name,
         service.service_description,
         service.actual_price,
         service.offer_price,
+        service.subscription_frequency, 
         quotationId,
         service.service_id,
       ];
@@ -426,6 +765,24 @@ const deleteNote = (req, res) => {
     }
   });
 };
+const updateNote = async (req, res) => {
+  const { notes } = req.body;
+
+  try {
+    // Use map to update each note in the database
+    await Promise.all(notes.map(async (note) => {
+      const { id, quotation_id, note_text } = note;
+      // Execute the update query for each note
+      await db.query('UPDATE notes SET note_text = ? WHERE id = ? AND quotation_id = ?', [note_text, id, quotation_id]);
+    }));
+    // Send a success response
+    res.status(200).json({ success: true, message: 'Notes updated successfully' });
+  } catch (error) {
+    console.error('Error updating notes:', error);
+    // Send an error response
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+};
 
 
 const getnotes_text = (req, res) => {
@@ -446,7 +803,10 @@ const getnotes_text = (req, res) => {
 
 
 
+
+
+
 module.exports = { Quotation, GetQuotation, Quotationviaid,addServices,deleteService, GetServices,deleteQuotation,updateServices,Notes,getNotes,
   getnotes_text,
-  deleteNote};
+  deleteNote , UpdateQuotationName,CopyQuotationData ,GetQuotationName,updateNote};
 
